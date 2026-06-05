@@ -1,0 +1,594 @@
+# tactiq.io free youtube transcript
+# S3 7. S3 Conditional Upload
+# https://www.youtube.com/watch/wvwoXPImFbc
+
+00:00:00.520 so far I have talked about S3 node and
+00:00:03.399 its corresponding storage in the high
+00:00:05.600 level S3 architecture so what happens is
+00:00:07.839 that there can be hundreds of thousands
+00:00:09.880 of nodes and there would be diss
+00:00:12.280 associated with those nodes again not
+00:00:14.679 only one disc there can be multiple
+00:00:16.840 discs attached to a single node and you
+00:00:20.680 know by now that uh that particular node
+00:00:23.519 would execute or run multiple services
+00:00:27.000 that cater to different features in S3
+00:00:29.679 now in this particular section I'll
+00:00:31.439 start with something called S3 storage
+00:00:33.559 class now when I talk about storage
+00:00:35.680 class what does that mean as you can see
+00:00:38.360 I have highlighted the storage part here
+00:00:40.160 so we'll be talking about the disks and
+00:00:43.079 its different types that are available
+00:00:45.440 in S3 so these are also managed by
+00:00:48.480 certain storage services in S3 it's not
+00:00:51.120 that we have only diss associated with
+00:00:53.840 this particular feature there are
+00:00:56.120 programs and services running for
+00:00:58.440 storage class also
+00:01:00.480 what is a storage class it provides
+00:01:02.559 different storage types access latency
+00:01:06.000 and availability based on usage meaning
+00:01:09.640 that we can decide the type of storage
+00:01:13.119 based on the usage of our workload and
+00:01:16.600 that particular type of storage would
+00:01:18.240 decide the latency and also availability
+00:01:22.360 and as you can see I have highlighted
+00:01:24.000 that the storage class is mentioned at
+00:01:26.159 object level so that's why I'm
+00:01:28.040 discussing it in the object part not not
+00:01:30.079 in the bucket part so in the bucket
+00:01:32.439 properties we did not see any storage
+00:01:35.280 class at all now I'll show you where do
+00:01:38.200 you mention storage class in the object
+00:01:41.520 so while uploading an object either
+00:01:43.680 using the console or using CLI or let's
+00:01:47.119 say WS SDK Etc we can mention the
+00:01:49.560 storage class so for example I have this
+00:01:52.759 bucket 3 IM S3 bucket and I have deleted
+00:01:55.560 all the files and now let me go ahead
+00:01:57.960 and upload a single file so I'm
+00:02:00.200 uploading _
+00:02:02.000 21.
+00:02:03.520 CSV now while uploading so far what I
+00:02:06.719 have done I have just shown you to click
+00:02:09.119 upload and the object or the file would
+00:02:11.560 be uploaded but there are lot of other
+00:02:14.840 details that you can mention while
+00:02:16.440 uploading the object so here we have
+00:02:18.840 destination details so basically this is
+00:02:21.360 the
+00:02:22.160 bucket encryption Ty and object lock
+00:02:25.120 which you have already seen at Bucket
+00:02:27.360 Level and then we have permissions I'll
+00:02:29.319 talk about misss in the security part
+00:02:31.360 and here we have properties now in the
+00:02:34.560 properties as you can see I can mention
+00:02:37.080 the storage class so I have different
+00:02:39.000 storage classes standard intelligent
+00:02:41.280 hearing etc etc and I can mention which
+00:02:44.519 storage class I want to upload this
+00:02:46.560 object to so this is what I'm going to
+00:02:49.480 discuss now these various storage
+00:02:51.440 classes the purposes of those storage
+00:02:53.879 classes and how different storage
+00:02:55.959 classes gives us the availability and
+00:02:58.519 scalability or latency that we need so
+00:03:01.360 I'll cancel it right now as you can see
+00:03:03.879 while uploading I can mention the
+00:03:05.920 storage class and the same thing can be
+00:03:08.239 done while uploading the file using AWS
+00:03:12.239 C or command line interface so to start
+00:03:15.000 with there is S3 standard storage class
+00:03:17.799 and it is the default storage class
+00:03:20.159 provided by S3 now all of these storage
+00:03:24.239 classes use ssds behind the scenes now
+00:03:28.000 S3 standard what is this s standard so
+00:03:30.560 this is basically a highly durable
+00:03:33.480 highly available and high performant for
+00:03:36.680 frequently accessed data now remember
+00:03:39.680 this the storage class is meant for
+00:03:41.920 frequently accessed data and this point
+00:03:44.799 is important that it is needed for
+00:03:47.599 frequently accessed data so if you have
+00:03:50.319 files or objects which you will be
+00:03:51.879 accessing pretty often it's better to
+00:03:54.239 store them at store them in S3 standard
+00:03:57.480 storage class because it gives
+00:03:59.760 durability and availability also we'll
+00:04:01.519 talk about availability shortly and it
+00:04:05.319 provides low latency and high throughput
+00:04:07.799 meaning that you can send a lot of
+00:04:10.640 requests to S3 storage and you can
+00:04:13.680 upload a lot of files parallell and A3
+00:04:16.759 standard storage Cloud would be able to
+00:04:18.358 handle it while providing low lend
+00:04:20.839 response times meaning that it will not
+00:04:23.040 take too much time to upload those files
+00:04:25.600 if you use standard uh storage class of
+00:04:28.560 course if the files are is pretty big
+00:04:30.720 then it would take certain amount of
+00:04:32.199 time but the time taken would be again
+00:04:34.680 lesser than other storage classes and by
+00:04:37.800 default it is stored in at least three
+00:04:40.440 different Aces and that's where we get
+00:04:42.560 the dur durability and availability from
+00:04:45.479 so if we have one node and one storage
+00:04:49.039 here it will be stored in at least two
+00:04:51.880 more nodes in different Aces let's say
+00:04:54.919 this particular node is in Us East 1 a
+00:04:58.199 this would be in Us East 1B and this
+00:05:00.120 would be in US 1C so you get high
+00:05:02.960 durability and availability out of the
+00:05:04.800 box this is non-configurable it is given
+00:05:07.680 to us by default and the use case is
+00:05:11.120 analytics so it is typically used for
+00:05:13.479 analytics reporting and other workloads
+00:05:16.400 so this is the first storage class and
+00:05:18.400 it is the it is the default one because
+00:05:21.000 of the performance availability and
+00:05:23.039 durability we have another storage class
+00:05:25.199 which gives better performance but that
+00:05:27.479 storage class compromises on
+00:05:29.199 availability
+00:05:30.960 the next one that I want to talk about
+00:05:32.400 is standard IIA or standard infrequent
+00:05:35.639 access so it is similar to S3 standard
+00:05:39.479 storage class it is highly available
+00:05:41.520 high throughput low latent but for Less
+00:05:45.840 frequently accessed data so if you know
+00:05:48.440 that your data would be accessed once or
+00:05:50.560 twice a month then it's better to store
+00:05:53.479 it in standard INF frequent access and
+00:05:55.880 it gives the similar durability
+00:05:57.440 availability and throughput and also
+00:05:59.639 responsiveness as that of standard
+00:06:01.600 storage class because it is stored in at
+00:06:04.360 least three different AES and typical
+00:06:06.680 use cases are for disaster recoveries
+00:06:09.440 backup higher duration for compliance
+00:06:12.160 and maybe Lock Storage these are some of
+00:06:14.280 the use cases now of course there might
+00:06:16.599 be a question that why do I have to use
+00:06:18.599 standard in frequent access rather than
+00:06:21.000 S3 standard if the durability throughput
+00:06:23.960 performance availability everything is
+00:06:25.759 same the reason is cost actually which
+00:06:28.120 I'll talk at the end of the storage
+00:06:30.319 class topic as I told you that in the
+00:06:32.960 previous slide that we have two
+00:06:34.800 different storage classes S3 standard
+00:06:36.720 and standard in frequent access which
+00:06:39.360 gives you high availability and high
+00:06:42.319 durability and high good performance
+00:06:44.680 also but if you need faster performance
+00:06:47.039 we can use something called s S3 Express
+00:06:50.440 one zone and it is high performance
+00:06:54.400 single a so the data that we upload in
+00:06:59.000 is3 Express one zone storage class that
+00:07:02.319 is stored in a single a and it is
+00:07:04.919 typically meant for frequently accessed
+00:07:06.840 data when we where we need very low
+00:07:09.599 latent access like single digit
+00:07:12.000 millisecond data access and it is almost
+00:07:15.199 10 times faster than the standard
+00:07:17.160 storage class if you need very fast
+00:07:19.560 access then you might want to use
+00:07:22.639 express one zone storage class where you
+00:07:24.960 can compromise on the durability and it
+00:07:28.080 is mostly suitable for storing small
+00:07:31.440 sized objects if you have pretty large
+00:07:33.680 objects like few hundred gab or so you
+00:07:36.080 should use S3 standard rather than
+00:07:37.800 Express one zone and typical use cases
+00:07:40.800 are analytics reporting dashboarding Etc
+00:07:44.319 and machine learning also so if you have
+00:07:46.800 machine learning models which will read
+00:07:49.240 data from S3 and do some pre-processing
+00:07:52.720 then it's better to use S3 Express one
+00:07:55.039 zone which gives you very high
+00:07:57.400 performance low latent experience
+00:08:00.639 now for S3 Express one zone we cannot
+00:08:03.159 create a bucket directly we have to
+00:08:05.199 create something called directory which
+00:08:06.639 I'll show you later on we have a
+00:08:08.680 separate topic for S3 Express one zone
+00:08:11.639 and we'll discuss that in future
+00:08:14.400 slides now similar to standard
+00:08:16.840 infrequent access we have one zone
+00:08:18.720 infrequent access also again this is
+00:08:21.400 same performance and latency of S3
+00:08:24.360 standard so not express one zone and it
+00:08:28.280 is meant for Less frequently accessed
+00:08:31.159 data and also it is stored in single a
+00:08:34.080 so if you are not worried about high
+00:08:36.200 availability then you can use S31 Zone
+00:08:39.519 in frequent access wherein the data
+00:08:42.399 would be stored in a single availability
+00:08:44.839 Zone and will give the same performance
+00:08:47.600 and latency as that of S3 standard so
+00:08:50.880 far the storage classes that I have
+00:08:52.360 talked about those are mainly used to
+00:08:55.040 handle data which are accessed very
+00:08:57.920 frequently or less frequently ly by less
+00:09:00.959 frequent I mean maybe once a month twice
+00:09:04.320 a month once a week Etc then apart from
+00:09:08.519 less frequent access S3 also provides a
+00:09:12.160 storage class for archival data where in
+00:09:15.560 we can archive the data which you know
+00:09:18.040 would be accessed maybe once a year or
+00:09:20.880 once in two years or maybe twice or
+00:09:22.800 three Thrice a year not more than that
+00:09:25.040 so that's where we have Glacier instant
+00:09:28.320 retrieval storage class so in this
+00:09:30.600 storage class what would happen is that
+00:09:32.440 we can use it to Archive data wherein we
+00:09:35.120 have to retrieve the records maybe once
+00:09:38.200 per quarter or once in a year or maybe
+00:09:41.839 once or twice half yearly etc etc
+00:09:45.399 basically the retrieval requirement is
+00:09:47.880 very less but still we need to Archive
+00:09:50.519 the data for compliance and other
+00:09:52.160 reasons or data governance reasons but
+00:09:55.279 S3 Glacier instant retrieval would give
+00:09:57.959 you inst immediate treal meaning if you
+00:10:01.160 want to access data the record would be
+00:10:04.000 ar immediately so it gives you
+00:10:06.519 millisecond access latency as that of
+00:10:09.279 standard and standard infrequent access
+00:10:11.800 storage classes but it is used mainly
+00:10:14.480 for archiving data and typically it is
+00:10:17.839 used for medical records media contents
+00:10:20.160 documents Etc and let's say we are using
+00:10:23.360 something like Facebook Instagram and we
+00:10:25.200 are storing data there there are lot of
+00:10:27.279 photos which get uploaded so what you
+00:10:29.440 see is that the photos which are
+00:10:31.640 uploaded recently can be accessed pretty
+00:10:35.079 soon but the photos which are pretty old
+00:10:37.920 are automatically uploaded to cloud and
+00:10:40.680 it takes some amount of time to retrieve
+00:10:43.079 so that's where Glacier instant retrial
+00:10:45.800 might play very important role because
+00:10:48.560 we want to store the records we want to
+00:10:50.600 store the data we do not want to delete
+00:10:52.360 the data but we want to pay lesser price
+00:10:55.200 so that's why gler instant retrieval
+00:10:57.959 comes into picture
+00:11:00.200 and we can use the API to upload
+00:11:03.600 directly or using life cycle policies to
+00:11:06.120 Glacier instant retrieval then you have
+00:11:08.680 Glacier flexible retrieval this is a
+00:11:11.160 little different than instant retrieval
+00:11:13.760 so the access requirement is similar to
+00:11:16.399 that of Glacier instant retrieval
+00:11:18.880 wherein we want to read the data maybe
+00:11:21.639 once or twice a year but the retrieval
+00:11:24.680 might take anywhere from minutes to
+00:11:26.519 hours so that's that's where the
+00:11:28.680 difference lies between instant
+00:11:30.920 retrieval and flexible retrieval both
+00:11:34.079 are archival storage for instant
+00:11:36.040 retrieval the access is within in
+00:11:39.160 milliseconds of course it would take its
+00:11:40.800 own time depending on how much data is
+00:11:43.680 downloaded so millisecond access is
+00:11:45.519 basically Block Level access but in case
+00:11:48.200 of flexible retrieval those access would
+00:11:50.920 also take C certain amount of time and
+00:11:54.360 as you might have guessed that it is
+00:11:55.920 used for Less frequently accessed data
+00:11:59.040 and and typically used for backup and Dr
+00:12:01.720 we have one more storage class for the
+00:12:04.800 archival data that is Glacier deep
+00:12:07.920 archive so what happens here this is
+00:12:10.440 mainly for long-term preservation for
+00:12:12.800 compliance and data governance reasons
+00:12:15.199 let's say we want to store data for 5
+00:12:17.120 years or 10 10 years or 15 years but we
+00:12:20.040 do not want to pay too much of price so
+00:12:21.880 that's where A3 Glacier deep archive
+00:12:25.199 would be helpful and typically it is
+00:12:27.639 used in financial organizations
+00:12:29.800 Insurance organizations and Healthcare
+00:12:32.560 organizations and the retrieval time is
+00:12:34.839 pretty high there's no guarantee it says
+00:12:38.000 that the retrieval time should be within
+00:12:40.040 12 hours so it does not matter what the
+00:12:42.639 size of your file is it might take
+00:12:45.800 anywhere from few hours to 12 hours to
+00:12:48.639 retrieve that particular data or file so
+00:12:52.079 these are the different storage classes
+00:12:54.480 that we can select we see that okay this
+00:12:57.000 is how the access path is or this is how
+00:12:59.199 the access pattern is and the based on
+00:13:01.560 the workload we can decide which storage
+00:13:04.279 class we should use for a particular
+00:13:06.320 object and we can change the storage
+00:13:08.279 class also so maybe we upload it in
+00:13:10.600 standard storage class then we can move
+00:13:13.240 it to other storage classes either
+00:13:15.600 manually or using something called life
+00:13:17.440 cycle policies or life cycle
+00:13:19.560 rules but let's say you do not want to
+00:13:21.720 do all those things you do not want any
+00:13:23.399 manual intervention or you do not want
+00:13:25.680 to provide any life cycle rules and also
+00:13:28.560 you do not know how the access would be
+00:13:30.680 maybe some files should be accessed
+00:13:32.680 frequently even though you think that
+00:13:34.320 those are meant for archive data so how
+00:13:37.279 do you handle those kind of scenarios so
+00:13:39.880 that's why S3 provides something called
+00:13:41.880 intelligent tiering storage class so in
+00:13:45.680 this storage class what happens is that
+00:13:48.320 S3 automatically moves objects across
+00:13:51.320 storage classes based on the access
+00:13:53.560 frequency so if you do not know what
+00:13:56.440 access frequency would be for your
+00:13:58.040 objects then you can use intelligent
+00:14:00.360 keing and behind the scenes S3 would
+00:14:03.440 look at the access patterns access
+00:14:05.120 frequency Etc and then it'll move the
+00:14:08.519 file across various storage classes by
+00:14:11.600 storage class I mean all the storage
+00:14:13.120 classes that I have discussed so far
+00:14:15.240 Glacier de archive can be thought of as
+00:14:18.079 a replacement for magnetic Magnetic Tape
+00:14:21.639 archives now the question is why do we
+00:14:23.959 have so many different storage classes
+00:14:25.519 and storage types for example S3
+00:14:28.240 standard and standard infrequent access
+00:14:30.839 gives the same availability same
+00:14:33.000 durability and same performance so why
+00:14:36.120 do we have two different storage classes
+00:14:37.959 why not only one storage class like
+00:14:40.519 standard same is the case with Glacier
+00:14:43.480 also or single zone also so the main
+00:14:45.959 reason is pricing what happens is that
+00:14:48.399 the pricing of these storage classes are
+00:14:51.199 very different and the pricing that I'm
+00:14:53.639 going to show you here is very high
+00:14:55.240 level so I'll go into the details of
+00:14:57.600 pricing when I talk talk about S3
+00:14:59.800 pricing in in later videos for standard
+00:15:03.320 storage class we'll have to pay
+00:15:06.160 023 per GB per month and for standard
+00:15:10.120 infrequent access we'll have to pay
+00:15:13.519 0125 per GB per month so you can see the
+00:15:17.160 P price difference so standard is almost
+00:15:19.880 double as that of standard in frequent
+00:15:22.399 xes same is the case with Express one
+00:15:24.880 zone and one zone IIA Express one zone
+00:15:28.040 is1
+00:15:29.560 6 per GB per month and one zone IIA is
+00:15:34.959 .01 per GB per month Express one zone is
+00:15:38.880 pretty costly and there's a reason
+00:15:41.279 because you get millisecond access
+00:15:44.920 latency Glacier instant retrieval is
+00:15:48.959 0.4 per GB per month Glacier flexible
+00:15:52.600 retrieval is
+00:15:54.600 0036 per GB per month and as you can see
+00:15:58.199 deep archive has the lowest cost
+00:16:01.959 with9 per GB per month so that's why you
+00:16:05.720 want to use different storage classes
+00:16:08.279 and storage types so if you need
+00:16:11.680 frequently accessed data which is highly
+00:16:13.920 available and durable then you can go
+00:16:15.480 ahead and use standard storage class if
+00:16:18.440 it is highly durable highly available
+00:16:21.600 data but you don't access it frequently
+00:16:23.639 then you can use standard in frequent
+00:16:25.360 access and one zone is basically for the
+00:16:29.480 files or workloads where you need very
+00:16:31.680 fast access now this is basically from
+00:16:35.199 AWS documentation on the left hand side
+00:16:38.279 it tells you about the different storage
+00:16:40.440 class and what is it it it is designed
+00:16:43.199 for you can go through it but I have
+00:16:46.800 actually got the slide to tell you about
+00:16:50.000 the durability and availability
+00:16:52.319 numbers for S3 standard it gives you 11
+00:16:55.720 NES of durability and four NES of
+00:16:59.440 availability but standard infrequent
+00:17:01.600 access gives you 119 of durability but
+00:17:03.720 the availability is 99.9 only it's 39
+00:17:08.439 not 49 so that's why S3 standard is
+00:17:11.439 costlier than standard IIA even though
+00:17:14.880 both are highly available durable and
+00:17:18.599 performant the availability is a little
+00:17:21.039 less for standard IIA so intelligent
+00:17:23.919 earing storage class gives you 11 NES of
+00:17:26.599 durability and three NES of availability
+00:17:28.960 which is
+00:17:31.080 99.9 and one zone IIA gives the least
+00:17:34.880 availability which is
+00:17:37.840 99.5% and durability is same 119 of
+00:17:41.559 durability and S3 Express one zone
+00:17:44.679 similar durability but availability is
+00:17:47.039 higher than S31 Zone IIA S3 intelligent
+00:17:51.440 earing and standard IIA which is
+00:17:55.080 99.95 now the thing is that if you see
+00:17:58.440 the availability zones S3 standard would
+00:18:01.720 keep the data in at least 3 A's same is
+00:18:04.520 a standard IA and intelligent hearing
+00:18:06.960 but one zone IIA and one zone Express
+00:18:10.679 will give you will store the data in one
+00:18:13.640 availability zone so sorry this is
+00:18:15.480 onzone IIA this is Express so onezone I
+00:18:18.280 has the least availability and Express
+00:18:20.840 on Zone has availability a little higher
+00:18:23.240 than one
+00:18:24.559 zone for all the glacier storage classes
+00:18:27.799 we get 119 of durability for instant
+00:18:30.679 retrieval we get three nines of
+00:18:32.559 availability as it is stored in at least
+00:18:34.679 three different
+00:18:35.919 AES for flexible retrieval we get four
+00:18:39.720 nines of availability after we restore
+00:18:41.880 the objects from flexible retrieval to
+00:18:45.280 some of the storage classes so Glacier
+00:18:48.159 instant retrieval also gives you 119 of
+00:18:50.679 durability and 49 of availability after
+00:18:53.760 the object is restored what is meant by
+00:18:56.480 that is if you have your file or object
+00:19:00.559 in Glacier flexible retrieval storage
+00:19:04.280 class we'll have to move it to any other
+00:19:06.960 storage classes from where you can
+00:19:09.919 access the record or access the object
+00:19:12.360 rather so it can be any S3 standard
+00:19:15.600 standard IIA one zone Express or instant
+00:19:19.039 retrieval also because you cannot read
+00:19:21.360 the files directly from flexible
+00:19:24.480 retrieval uh storage class and it is
+00:19:27.280 also stored in at least three different
+00:19:28.720 different A's same is the case with deep
+00:19:31.799 archive gives you 11 NES of durability
+00:19:34.600 and four nines of availability as it is
+00:19:37.039 stored in at least three different ACS
+00:19:40.120 and this four NES of availability is
+00:19:41.880 after we restore the objects to any
+00:19:44.919 other storage classes and that's about
+00:19:47.720 different storage classes and I have
+00:19:50.039 also shown you how you can actually
+00:19:52.799 mention the storage class while
+00:19:54.440 uploading the
+00:19:55.720 objects typically you'll be using St
+00:19:58.679 storage class with life cycle policies
+00:20:00.480 or life cycle rules in most of the cases
+00:20:03.720 you might be using intelligent storage
+00:20:06.080 tier also so there's not much Hands-On
+00:20:08.760 to be shown for uh this storage class
+00:20:11.559 although I'll show you S3 Express one
+00:20:14.360 zone because that's a little different
+00:20:16.080 than any other storage classes S3 also
+00:20:19.720 provides something called conditional
+00:20:21.760 upload now what is this conditional
+00:20:23.559 upload if we upload object with the same
+00:20:27.200 name what happens to so that object in
+00:20:29.799 the bucket it gets over written and to
+00:20:34.720 avoid that accidental upload accidental
+00:20:37.640 delete Etc we use versioning so delete
+00:20:41.919 is something that we cannot actually
+00:20:45.120 control too much but we can control the
+00:20:47.039 upload and that's where conditional
+00:20:49.000 upload helps by default a file is
+00:20:51.919 overwritten if the same Keys present in
+00:20:53.919 a bucket but it can be avoided by
+00:20:57.400 conditional upload so what it does it
+00:21:00.679 checks whether the file is available or
+00:21:02.480 not if the file is available then S3
+00:21:06.159 will not upload the file again and it
+00:21:09.520 can be achieved only using API or CLI we
+00:21:12.360 do not have any option in the console to
+00:21:15.000 do a conditional upload and one more
+00:21:18.200 thing to note is that the CLI version
+00:21:20.080 should be at least
+00:21:22.919 2.9.1 and this is the command so as you
+00:21:25.320 can see we are using S3 API command and
+00:21:29.000 then the put object we mention the
+00:21:31.240 bucket name followed by the Q uh key
+00:21:33.760 name and we mention something called if
+00:21:36.960 none match so this is the main keyword
+00:21:40.559 so if you mention if none match followed
+00:21:42.799 by
+00:21:43.720 asteris then the same object will not be
+00:21:47.200 uploaded if it is already there now one
+00:21:50.360 more thing if you're using a version
+00:21:52.240 Which is less than
+00:21:54.039 2.19 then you might get error that if
+00:21:57.200 none match is not an not a valid option
+00:21:59.919 in the command line so if you get that
+00:22:01.840 option if you get that error message
+00:22:04.200 make sure to upgrade the CLA version now
+00:22:08.600 the first thing that I want to show you
+00:22:10.000 is that in this three S3 bucket and in
+00:22:13.200 the retail folder I already have
+00:22:16.080 customers 2. CSV and orders
+00:22:20.520 21. CSV so what I'm going to do is that
+00:22:24.320 I'm going to upload the same object
+00:22:27.320 using CLI from from the ec2
+00:22:29.799 instance and when I do that I should get
+00:22:32.840 an error now let me open the ec2 console
+00:22:35.679 and there's one more thing that I have
+00:22:38.320 to tell you about ec2 instance profile
+00:22:42.120 so this is something uh related to am or
+00:22:46.120 identity and access management so if you
+00:22:48.600 don't understand it please go ahead and
+00:22:51.520 look at the am video and then come back
+00:22:53.960 to uh this particular section again what
+00:22:57.400 I'm doing is that if go to actions and
+00:23:00.039 go to security and click on modify IMR
+00:23:03.960 so I have already an IMR associated with
+00:23:07.200 the ec2 instance and this IM rooll has
+00:23:10.440 A3 full access meaning that if I open
+00:23:14.559 the IM console and if I look at this AWS
+00:23:18.520 data engineering ec2 S3 full access IM
+00:23:22.080 role so I'll have to go to role and type
+00:23:25.480 AWS data engineering so this is the RO
+00:23:29.679 and as you can see I have Associated is3
+00:23:31.960 full access to this role and the role is
+00:23:35.559 associated with the ec2 instance make
+00:23:38.600 sure it is done if you don't understand
+00:23:41.640 please go ahead and look at the IM am
+00:23:43.760 video and come back to this this uh
+00:23:46.120 Hands-On again all right so now what
+00:23:49.200 I'll do is that I will log to this E2
+00:23:52.000 instance and I'm inside of the E2
+00:23:54.279 instance as you can see I have this file
+00:23:56.200 orders 21. CSV in the ec2 instance
+00:24:01.080 itself and I'll use the S3 API command
+00:24:04.640 line or S3 CLI rather to upload this
+00:24:08.360 file in the S3 bucket 3 IM S3 bucket and
+00:24:12.120 in the folder
+00:24:13.559 retail so this is the command s AWS S3
+00:24:17.320 API followed by put object then I'm
+00:24:20.440 providing the name of the bucket which
+00:24:22.120 is 3 S3 bucket followed by the key now
+00:24:26.679 remember in the key I'm mentioning the
+00:24:28.600 folder because folder is part of key not
+00:24:32.320 bucket so if I mention 3 IM S3 bucket SL
+00:24:35.799 retail it will give me error that
+00:24:37.919 there's no bucket asset so the folder
+00:24:40.440 name is also part of the key and here
+00:24:42.679 I'm mentioning if none match now if I
+00:24:45.960 execute
+00:24:47.080 this I'm getting this error unknown
+00:24:50.159 options if none match so basically the
+00:24:53.080 reason is that if I type AWS S3 sorry
+00:24:57.720 AWS verion as you can see the version is
+00:25:01.080 1.18 so I'll have to go to 2.19 so I'll
+00:25:03.960 have to up upgrade this CLI version now
+00:25:08.080 to upgrade just type upgrade AWS CLI and
+00:25:13.120 the it will give you a documentation
+00:25:14.720 installing or updating the latest
+00:25:16.279 version of
+00:25:17.399 AWS and in Linux what you have to do is
+00:25:20.600 we'll have to first remove AWS so copy
+00:25:27.000 this so there's no AWS CLI anymore if I
+00:25:31.120 type AWS / SL version it will say no
+00:25:34.600 suchar file or directory so I have
+00:25:35.919 removed
+00:25:38.399 it I have downloaded I'm unzipping the
+00:25:41.799 file so this is the file that I have
+00:25:45.200 unzipped
+00:25:46.679 AWS and then I'll have to run the
+00:25:49.200 command sud sudo AWS install I have not
+00:25:52.080 put the commands in the command sheet
+00:25:54.640 because you'll find you can find it
+00:25:56.600 pretty easily in Google
+00:25:58.880 so now if I type AWS D- version so as
+00:26:02.720 you can see the version is
+00:26:04.279 222 and now if I run this command it
+00:26:07.960 should not give me any error but I'll
+00:26:10.480 have to add user local bin AWS in front
+00:26:14.919 of it so now it is running so as it says
+00:26:18.320 an error occurred this is a different
+00:26:20.279 error it says precond condition failed
+00:26:23.399 when calling the put object operation so
+00:26:26.159 at least one of the preconditions failed
+00:26:28.360 which is basically if none match so as
+00:26:30.919 you can see that the object or the file
+00:26:34.240 was not uploaded because it already
+00:26:36.840 exists in the bucket and the folder that
+00:26:39.559 we have mentioned
