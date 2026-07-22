@@ -76,3 +76,136 @@ Spark
  ↓
 S3
 ```
+
+# Amazon EMR - Ultra Crisp Notes (Part 2)
+
+## EMR Cluster
+
+**Definition:** Collection of EC2 instances managed by EMR.
+
+``` text
+EMR Cluster
+↓
+EC2 + EC2 + EC2 + EC2
+```
+
+------------------------------------------------------------------------
+
+## EMR Node Types
+
+**Master Node** - Manage cluster - Schedule jobs - Monitor nodes
+
+**Core Node** - Process data - Store data (HDFS)
+
+**Task Node** - Process only - No storage - Optional
+
+------------------------------------------------------------------------
+
+## Node Summary
+
+``` text
+Master → Manage
+Core → Store + Process
+Task → Process Only
+```
+
+------------------------------------------------------------------------
+
+## Cluster Example
+
+``` text
+Master
+├── Core 1
+├── Core 2
+├── Core 3
+├── Task 1
+└── Task 2
+```
+
+------------------------------------------------------------------------
+
+## YARN
+
+**Definition:** Resource Manager of Hadoop.
+
+**Responsibilities** - Allocate CPU - Allocate Memory - Schedule Jobs -
+Launch Containers - Monitor Resources
+
+------------------------------------------------------------------------
+
+## Remember
+
+-   **EMR** → Creates Cluster
+-   **YARN** → Allocates Resources
+-   **Spark** → Processes Data
+
+------------------------------------------------------------------------
+
+## Flow
+
+``` text
+You
+↓
+Spark Job
+↓
+YARN
+↓
+EC2 Cluster
+↓
+S3
+```
+
+------------------------------------------------------------------------
+
+## Complete Architecture
+
+``` text
+S3
+↓
+EMR
+↓
+Master Node
+↓
+YARN
+↓
+Core / Task Nodes
+↓
+Spark Executors
+↓
+S3
+```
+
+------------------------------------------------------------------------
+
+## Interview Points
+
+**Does EMR allocate CPU/RAM?**
+
+❌ No
+
+✅ YARN does.
+
+**Does Spark allocate resources?**
+
+❌ No
+
+✅ Spark requests resources from YARN.
+
+**Can Task Nodes be removed?**
+
+✅ Yes
+
+Reason: - No data storage - Compute only - Optional
+
+------------------------------------------------------------------------
+
+## One-Line Revision
+
+-   **EMR** → Cluster Manager
+-   **Master** → Cluster Manager Node
+-   **Core** → Compute + Storage
+-   **Task** → Compute Only
+-   **YARN** → Resource Manager
+-   **Spark** → Processing Engine
+
+
