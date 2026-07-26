@@ -476,3 +476,519 @@ Action
 │
 ├── Execute Job
 ```
+
+
+
+
+# Amazon EMR & Apache Spark Handbook
+## Part 2 - Spark Execution Internals
+
+> Covers:
+> - Spark Job
+> - Spark Stage
+> - Spark Task
+> - DAG (Directed Acyclic Graph)
+> - Catalyst Optimizer
+
+---
+
+# 1. Spark Job
+
+## Definition
+
+A **Spark Job** is a unit of work created whenever an **Action** is triggered.
+
+## Rule
+
+> **One Action = One Job**
+
+## Examples
+
+### Example 1
+
+```python
+df.filter(...)
+df.select(...)
+df.show()
+```
+
+- Transformations → filter(), select()
+- Action → show()
+
+Result:
+
+```
+1 Application
+      │
+      ▼
+    1 Job
+```
+
+---
+
+### Example 2
+
+```python
+df.count()
+df.show()
+```
+
+Result:
+
+```
+Application
+
+├── Job 1 (count)
+
+└── Job 2 (show)
+```
+
+---
+
+## Remember
+
+- Transformations do NOT create Jobs.
+- Actions create Jobs.
+
+---
+
+# 2. Spark Stage
+
+## Definition
+
+A **Stage** is a group of parallel Tasks that can execute **without data shuffling**.
+
+---
+
+## Rule
+
+```
+No Shuffle
+↓
+
+Same Stage
+
+Shuffle
+↓
+
+New Stage
+```
+
+---
+
+## Operations Without Shuffle
+
+- filter()
+- select()
+- withColumn()
+- drop()
+
+---
+
+## Operations That Usually Cause Shuffle
+
+- groupBy()
+- join()
+- distinct()
+- orderBy()
+- repartition()
+
+---
+
+## Example
+
+```python
+df.filter(...)
+  .select(...)
+  .groupBy(...)
+  .show()
+```
+
+Execution:
+
+```
+Job
+
+│
+
+├── Stage 1
+│      Read
+│      Filter
+│      Select
+│
+│   Shuffle
+│
+└── Stage 2
+       GroupBy
+       Show
+```
+
+---
+
+## Remember
+
+> **Shuffle creates a new Stage.**
+
+---
+
+# 3. Spark Task
+
+## Definition
+
+A **Task** is the smallest unit of work executed by one Executor on one data partition.
+
+---
+
+## Rule
+
+> **One Partition = One Task**
+
+---
+
+### Example
+
+```
+100 Partitions
+
+↓
+
+100 Tasks
+```
+
+Even if only:
+
+```
+10 Executors
+```
+
+Spark still creates:
+
+```
+100 Tasks
+```
+
+Executors execute them in multiple rounds.
+
+---
+
+## Important
+
+Tasks depend on:
+
+- Number of partitions ✅
+
+NOT on:
+
+- Number of executors ❌
+
+---
+
+## Relationship
+
+```
+Driver
+
+↓
+
+Creates Tasks
+
+↓
+
+Executors Execute Tasks
+```
+
+---
+
+## Remember
+
+```
+Executor = Worker
+
+Task = Work
+```
+
+---
+
+# 4. DAG (Directed Acyclic Graph)
+
+## Definition
+
+A **DAG (Directed Acyclic Graph)** is Spark's execution plan representing the sequence and dependencies of transformations before execution.
+
+---
+
+## Meaning
+
+### Directed
+
+Operations execute in order.
+
+```
+Read
+
+↓
+
+Filter
+
+↓
+
+Select
+
+↓
+
+GroupBy
+```
+
+---
+
+### Acyclic
+
+No loops.
+
+Execution always moves forward.
+
+---
+
+### Graph
+
+Each transformation becomes a node.
+
+---
+
+## Flow
+
+```
+PySpark Code
+
+↓
+
+Lazy Evaluation
+
+↓
+
+DAG
+
+↓
+
+Job
+
+↓
+
+Stages
+
+↓
+
+Tasks
+
+↓
+
+Execution
+```
+
+---
+
+## Why DAG?
+
+Spark analyses the complete workflow before execution.
+
+This allows Spark to optimize execution.
+
+---
+
+## Example
+
+Instead of:
+
+```
+Filter Age
+
+↓
+
+Filter Salary
+```
+
+Spark can optimize to:
+
+```
+Filter Age AND Salary
+```
+
+Result:
+
+- Less computation
+- Faster execution
+
+---
+
+# 5. Catalyst Optimizer
+
+## Definition
+
+Catalyst Optimizer is Spark's query optimization engine that converts a logical plan into an optimized physical execution plan.
+
+---
+
+## Workflow
+
+```
+PySpark Code
+
+↓
+
+Logical Plan
+
+↓
+
+Catalyst Optimizer
+
+↓
+
+Optimized Logical Plan
+
+↓
+
+Physical Plan
+
+↓
+
+Execution
+```
+
+---
+
+## Responsibilities
+
+- Merge filters
+- Remove unnecessary columns
+- Push filters closer to data source
+- Choose efficient execution strategy
+
+---
+
+## Example 1 - Column Pruning
+
+Table:
+
+```
+200 Columns
+```
+
+Code:
+
+```python
+df.select("name")
+```
+
+Catalyst reads:
+
+```
+Only "name"
+```
+
+instead of all 200 columns.
+
+---
+
+## Example 2 - Predicate Pushdown
+
+Code:
+
+```python
+df.filter(df.salary > 50000)
+```
+
+Instead of:
+
+```
+Read Everything
+
+↓
+
+Filter
+```
+
+Catalyst (when supported by the data source) pushes the filter closer to the storage layer so less data is read.
+
+---
+
+# Complete Spark Execution Flow
+
+```
+spark-submit
+      │
+      ▼
+Spark Application
+      │
+      ▼
+Lazy Evaluation
+      │
+      ▼
+DAG Created
+      │
+      ▼
+Action
+      │
+      ▼
+Spark Job
+      │
+      ▼
+Stages
+      │
+      ▼
+Tasks
+      │
+      ▼
+Executors
+      │
+      ▼
+Data Processed
+```
+
+---
+
+# Complete Hierarchy
+
+```
+Spark Application
+        │
+        ▼
+      Job
+        │
+        ▼
+     Stage
+        │
+        ▼
+      Task
+        │
+        ▼
+    Executor
+```
+
+---
+
+# Interview Cheat Sheet
+
+| Concept | Remember |
+|----------|----------|
+| Application | One `spark-submit` |
+| Job | Created by an Action |
+| Stage | Split by Shuffle |
+| Task | One Partition = One Task |
+| Executor | Executes Tasks |
+| DAG | Execution Plan |
+| Catalyst | Optimizes Query |
+| Lazy Evaluation | Wait until Action |
+
+---
+
+# One-Line Revision
+
+- One `spark-submit` = One Application.
+- One Action = One Job.
+- One Shuffle = New Stage.
+- One Partition = One Task.
+- Executors execute Tasks.
+- Driver creates execution plan.
+- DAG represents execution dependencies.
+- Catalyst optimizes the execution plan.
+- Lazy Evaluation delays execution until an Action.
