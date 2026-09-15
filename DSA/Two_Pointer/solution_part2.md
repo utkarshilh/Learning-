@@ -615,6 +615,9 @@ public:
 
         for(int i = 0; i < n; i++){
 
+            if(i>0 && nums[i]==nums[i-1]) continue; // skipping element if the existing i was the same element 
+
+
             int j = i + 1;
             int k = n - 1;
 
